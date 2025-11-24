@@ -55,6 +55,9 @@ Open `demo.ipynb` in PyCharm to interact with the system.
 
 ##### Portfolio Monitoring
 * Monitor portfolio level performance
+
+##### UI ideas for the Loan Management System
+* Leverage AI to create a UI for the system
   
   
 

@@ -1,0 +1,6 @@
+pydantic
+numpy-financial
+jupyter
+pandas
+matplotlib
+google-genai

@@ -35,14 +35,20 @@ Open `demo.ipynb` in PyCharm to interact with the system.
   2. `Allocation` table to allocate cash that being received to the charges fallen due. 
      *  `Allocation` should be joint to `Charges` table based on `Recognised_ID`
      * `Cash` that cannot be allocated should go to overpayment
+     * This should allow to track `Arrears` 
      * `AI` needed to create payments to replicate customer behaviours 
 * `Income` should be recognised twice for accounting purposes once when a charge is fallen due and once at month end.
      * `Income_model` therefore need a daily interest recognition system
+     * `Write off` to be allowed in the agreement
 
 * `Status` to given to each loan `Live` `Default` `Settled` 
   * Need `life-changing events` in the system to move the statuses based on triggers.
   * `Rebate calculator` for `Full Settlements` and `Partial Settlements` in order to `rebate` interest from the loan.
   * `AI` to create settlement requests
+
+    
+#### Loan Loss Provisioning
+* Implement `Loan Loss Provisioning` using `ECL Model`
 
 
 #### Funding

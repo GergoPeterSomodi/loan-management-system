@@ -70,6 +70,9 @@ def generate_car_loan_data(num_records=10):
 def calculate_repayments(df):
     """
     Calculates monthly payments based on a Flat Rate formula.
+    Total Interest =  Finance amount * Flat Rate * Term (Years)
+    Total Amount Payable (TAP) = Finance Amount + Total Interest
+    Monthly Repayment (CMI) = Total Amount Payable (TAP) / Term (Months)
     """
     if df.empty:
         return df
@@ -80,16 +83,16 @@ def calculate_repayments(df):
     # Calculate Total Interest
     df['Total Interest'] = df['Finance Amount'] * (df['Flat Rate (%)'] / 100) * df['Term (Years)']
 
-    # Calculate Total Payable
-    df['Total Payable'] = df['Finance Amount'] + df['Total Interest']
+    # Calculate Total Amount Payable
+    df['Total Amount Payable'] = df['Finance Amount'] + df['Total Interest']
 
     # Calculate Monthly Payment
-    df['Monthly Payment'] = df['Total Payable'] / df['Term (Months)']
+    df['Monthly Repayment'] = df['Total Amount Payable'] / df['Term (Months)']
 
     # Round monetary values
     df['Total Interest'] = df['Total Interest'].round(2)
-    df['Total Payable'] = df['Total Payable'].round(2)
-    df['Monthly Payment'] = df['Monthly Payment'].round(2)
+    df['Total Amount Payable'] = df['Total Amount Payable'].round(2)
+    df['Monthly Repayment'] = df['Monthly Repayment'].round(2)
 
     return df
 
@@ -107,7 +110,7 @@ if __name__ == "__main__":
         pd.set_option('display.width', 1000)
 
         # This will now work because 'Monthly Payment' exists
-        print(loan_df[['Car Make', 'Finance Amount', 'Flat Rate (%)', 'Monthly Payment']].head())
+        print(loan_df[['Car Make', 'Finance Amount', 'Flat Rate (%)', 'Monthly Repayment']].head())
 
         output_file = "gemini_car_loans.csv"
         loan_df.to_csv(output_file, index=False)

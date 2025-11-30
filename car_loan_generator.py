@@ -1,8 +1,6 @@
 import pandas as pd
 import os
 import json
-
-from dateutil.utils import today
 from google import genai
 from google.genai import types
 
@@ -103,7 +101,7 @@ def main():
     loan_df = generate_car_loan_data(10)
 
     if not loan_df.empty:
-        # --- FIXED: This line must be uncommented for the print statement below to work ---
+
         loan_df = calculate_repayments(loan_df)
 
         print("\nPreview of Gemini-generated data with calculations:")

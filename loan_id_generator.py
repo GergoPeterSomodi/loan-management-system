@@ -26,8 +26,9 @@ def clean_column_names(df):
 
 def generate_loan_id(date_str, existing_ids_set):
     """
-    Pure Function: Generates a unique ID for a specific date.
-    Retries recursively if a collision occurs (though rare).
+    Recursively generates a unique loan ID in the format LOAN-YYMMDD-0000.
+    The YYMMDD segment represents the loan’s contract date, followed by a 4-digit random value.
+    It is unlikely that more than 10,000 contracts will be generated in a single day, so four digits should be sufficient.
     """
     # Generate random 4-digit suffix (e.g., '0492')
     suffix = f"{random.randint(0, 9999):04d}"
@@ -41,17 +42,27 @@ def generate_loan_id(date_str, existing_ids_set):
 
 def process_loans(df, existing_ids):
     """
-    Adds an 'id' column to the dataframe.
+    Adds a 'loan_id' column using the 'contract_date' from each row.
     """
-    # Get today's date string once for the batch
-    today_str = datetime.datetime.now().strftime("%y%m%d")
+    # 1. Ensure contract_date is a datetime object so we can format it
+    # errors='coerce' turns invalid dates into NaT (Not a Time)
+    df['contract_date'] = pd.to_datetime(df['contract_date'], errors='coerce')
 
-    # Create a local copy of the set to track IDs generated within this batch
+    # 2. Fill missing dates with today's date (just in case)
+    df['contract_date'] = df['contract_date'].fillna(pd.Timestamp.now())
+
     current_ids = existing_ids.copy()
-
     new_ids = []
-    for i in range(len(df)):
-        unique_id = generate_loan_id(today_str, current_ids)
+
+    # 3. Iterate through every row to get that specific car's date
+    for index, row in df.iterrows():
+        # Extract the date object from the row
+        c_date = row['contract_date']
+
+        # Format it as YYMMDD (e.g., 2025-11-29 becomes 251129)
+        row_date_str = c_date.strftime("%Y%m%d")
+
+        unique_id = generate_loan_id(row_date_str, current_ids)
         current_ids.add(unique_id) #Add to the existing set of IDs
         new_ids.append(unique_id) #Add to the new IDs
 
@@ -108,7 +119,7 @@ def main():
     print(f"Success! Saved to '{DB_FILE}' in table '{TABLE_NAME}'.")
     print("\nPreview of new data:")
     # Note: Columns are now snake_case in the preview
-    print(df_processed[['loan_id', 'car_make', 'finance_amount']].head())
+    print(df_processed.head())
 
 
 if __name__ == "__main__":

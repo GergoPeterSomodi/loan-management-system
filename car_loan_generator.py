@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 import json
+
+from dateutil.utils import today
 from google import genai
 from google.genai import types
 
@@ -60,6 +62,7 @@ def generate_car_loan_data(num_records=10):
 
         # Create DataFrame
         df = pd.DataFrame(data)
+        df['Contract Date'] = pd.Timestamp.now().normalize()
         return df
 
     except Exception as e:
@@ -96,8 +99,7 @@ def calculate_repayments(df):
 
     return df
 
-
-if __name__ == "__main__":
+def main():
     loan_df = generate_car_loan_data(10)
 
     if not loan_df.empty:
@@ -110,10 +112,13 @@ if __name__ == "__main__":
         pd.set_option('display.width', 1000)
 
         # This will now work because 'Monthly Payment' exists
-        print(loan_df[['Car Make', 'Finance Amount', 'Flat Rate (%)', 'Monthly Repayment']].head())
+        print(loan_df.head())
 
         output_file = "gemini_car_loans.csv"
         loan_df.to_csv(output_file, index=False)
         print(f"\nData saved successfully to '{output_file}'")
     else:
         print("Failed to generate data.")
+
+if __name__ == "__main__":
+    main()

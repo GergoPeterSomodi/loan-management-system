@@ -9,7 +9,8 @@ A modular system for managing vehicle financing loans.
    `pip install -r requirements.txt`
 
 ## How to Run
-Open `demo.ipynb` in PyCharm to interact with the system.
+Run `main.py`
+Use `testin.ipynb` to interact with the system.
 
 ## Future project plan
 #### Application process and credit scoring system 

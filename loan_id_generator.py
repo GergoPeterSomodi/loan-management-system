@@ -27,11 +27,10 @@ def clean_column_names(df):
 def generate_loan_id(date_str, existing_ids_set):
     """
     Recursively generates a unique loan ID in the format LOAN-YYMMDD-0000.
-    The YYMMDD segment represents the loan’s contract date, followed by a 4-digit random value.
-    It is unlikely that more than 10,000 contracts will be generated in a single day, so four digits should be sufficient.
+    The YYMMDD segment represents the loan’s contract date, followed by a 5-digit random value.
     """
-    # Generate random 4-digit suffix (e.g., '0492')
-    suffix = f"{random.randint(0, 9999):04d}"
+    # Generate random 5-digit suffix (e.g., '05492')
+    suffix = f"{random.randint(0, 99999):05d}"
     new_id = f"LOAN-{date_str}-{suffix}"
 
     # Simple collision check
@@ -60,7 +59,7 @@ def process_loans(df, existing_ids):
         c_date = row['contract_date']
 
         # Format it as YYMMDD (e.g., 2025-11-29 becomes 251129)
-        row_date_str = c_date.strftime("%Y%m%d")
+        row_date_str = c_date.strftime("%y%m%d")
 
         unique_id = generate_loan_id(row_date_str, current_ids)
         current_ids.add(unique_id) #Add to the existing set of IDs
